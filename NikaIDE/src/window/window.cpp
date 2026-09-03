@@ -11,6 +11,7 @@ void NikaIDE::InitWindow(std::string windowTitle, int x, int y, int w, int h)
 	wc.cbSize = sizeof(WNDCLASSEXA);
 	wc.lpszClassName = "CLASS_NIKAIDE";
 	wc.lpfnWndProc = WndProc;
+	wc.hbrBackground = CreateSolidBrush(RGB(47, 47, 47));
 	if (RegisterClassExA(&wc) == NULL) {
 		LogError("Class registration failed");
 		return;
@@ -21,6 +22,12 @@ void NikaIDE::InitWindow(std::string windowTitle, int x, int y, int w, int h)
 		LogError("Window creation failed");
 		return;
 	}
+
+	// Initialize treeview
+	INITCOMMONCONTROLSEX icex;
+	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icex.dwICC = ICC_TREEVIEW_CLASSES;
+	InitCommonControlsEx(&icex);
 
 	LogInfo("Window initialized!");
 }

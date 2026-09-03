@@ -3,7 +3,7 @@
 int main()
 {
     // Initialize window
-    NikaIDE::InitWindow("NikaIDE v1.0.0",50,50,600,500);
+    NikaIDE::InitWindow("NikaIDE v1.0.0",50,50,600,600);
 
     // Handle events
     NikaIDE::PollEvents();
