@@ -2,26 +2,18 @@
 
 #include "../../include/window/wndProc.h"
 
-#define _CRT_SECURE_NO_WARNINGS
-
-#define EDITOR_ID 100
-#define EDITOR_LINES_ID 101
-#define EXPLORER_ID 200
+static int lines = 1;
+static std::string lineNumbers;
 
 static void CreateChildren(HWND hwnd) {
 	// Editor
 	CreateWindowExA(0, "EDIT", 0, WS_VISIBLE | WS_CHILD | ES_MULTILINE, 35,40,535,400,hwnd,(HMENU)EDITOR_ID,0,0);
 	CreateWindowExA(0, "STATIC", 0, WS_VISIBLE | WS_CHILD, 5, 40, 30, 400, hwnd, (HMENU)EDITOR_LINES_ID, 0, 0); // editor lines
 
-
 	// Explorer
 	//CreateWindowExA(0, "SysTreeView32", 0, WS_VISIBLE | WS_CHILD, 5, 50, 180, 400, hwnd, (HMENU)EXPLORER_ID, 0, 0);
 
 }
-
-static int lines = 1;
-
-static std::string lineNumbers;
 
 static void UpdateLines(HWND hwnd) {
 	lines = SendDlgItemMessageA(hwnd, EDITOR_ID, EM_GETLINECOUNT, 0, 0);
@@ -35,26 +27,31 @@ static void UpdateLines(HWND hwnd) {
 	SendDlgItemMessageA(hwnd, EDITOR_LINES_ID, WM_SETTEXT, 0, (LPARAM)lineNumbers.c_str());
 }
 
+
+
 LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
 
 	case WM_CREATE: {
 		CreateChildren(hwnd);
+		AddMenu(hwnd);
 		UpdateLines(hwnd);
 		break;
 	}
 
 	case WM_COMMAND: {
-
-		if (HIWORD(wParam) == EN_CHANGE) {
+		if (HIWORD(wParam) == EN_CHANGE) { // updates editor lines when editor is changed
 			WORD controlId = LOWORD(wParam);
 
 			if (controlId == EDITOR_ID) {
 				UpdateLines(hwnd);
+				break;
 			}
-
 		}
+
+		// handles menu buttons clicked in menu.cpp
+		HandleMenu(wParam, hwnd);
 
 	}
 

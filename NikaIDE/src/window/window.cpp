@@ -29,6 +29,9 @@ void NikaIDE::InitWindow(std::string windowTitle, int x, int y, int w, int h)
 	icex.dwICC = ICC_TREEVIEW_CLASSES;
 	InitCommonControlsEx(&icex);
 
+	// Initialize COM library
+	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+
 	LogInfo("Window initialized!");
 }
 
