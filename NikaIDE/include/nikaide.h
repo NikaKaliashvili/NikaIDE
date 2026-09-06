@@ -3,6 +3,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #define MENU_OPEN_ID 10
+#define MENU_SAVE_ID 11
 
 #define EDITOR_ID 100
 #define EDITOR_LINES_ID 101
@@ -15,7 +16,6 @@
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <vector>
 #include <commctrl.h>

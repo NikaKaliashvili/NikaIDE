@@ -7,8 +7,13 @@ static std::string lineNumbers;
 
 static void CreateChildren(HWND hwnd) {
 	// Editor
-	CreateWindowExA(0, "EDIT", 0, WS_VISIBLE | WS_CHILD | ES_MULTILINE, 35,40,535,400,hwnd,(HMENU)EDITOR_ID,0,0);
-	CreateWindowExA(0, "STATIC", 0, WS_VISIBLE | WS_CHILD, 5, 40, 30, 400, hwnd, (HMENU)EDITOR_LINES_ID, 0, 0); // editor lines
+	HWND hEdit = CreateWindowExA(0, "EDIT", 0, WS_VISIBLE | WS_CHILD | ES_MULTILINE, 35,40,535,400,hwnd,(HMENU)EDITOR_ID,0,0);
+	HFONT codeFont = CreateFontW(24, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Cascadia Code"));
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)codeFont, TRUE);
+
+	HWND hLines = CreateWindowExA(0, "STATIC", 0, WS_VISIBLE | WS_CHILD, 5, 40, 30, 400, hwnd, (HMENU)EDITOR_LINES_ID, 0, 0); // editor lines
+	SendMessage(hLines, WM_SETFONT, (WPARAM)codeFont, TRUE);
+
 
 	// Explorer
 	//CreateWindowExA(0, "SysTreeView32", 0, WS_VISIBLE | WS_CHILD, 5, 50, 180, 400, hwnd, (HMENU)EXPLORER_ID, 0, 0);
@@ -26,8 +31,6 @@ static void UpdateLines(HWND hwnd) {
 	}
 	SendDlgItemMessageA(hwnd, EDITOR_LINES_ID, WM_SETTEXT, 0, (LPARAM)lineNumbers.c_str());
 }
-
-
 
 LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
