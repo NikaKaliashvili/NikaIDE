@@ -20,13 +20,13 @@ static void CreateChildren(HWND hwnd) {
 
 }
 
-static void UpdateLines(HWND hwnd) {
+void UpdateLines(HWND hwnd) {
 	lines = SendDlgItemMessageA(hwnd, EDITOR_ID, EM_GETLINECOUNT, 0, 0);
 
 	lineNumbers = "";
 
 	for (int i = 0; i < lines; i++) {
-		lineNumbers += std::to_string(i+1);
+		lineNumbers += std::to_string(i + 1);
 		lineNumbers += "\n";
 	}
 	SendDlgItemMessageA(hwnd, EDITOR_LINES_ID, WM_SETTEXT, 0, (LPARAM)lineNumbers.c_str());

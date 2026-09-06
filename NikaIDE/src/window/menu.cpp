@@ -1,6 +1,8 @@
 #include "../../include/nikaide.h"
 
-std::wstring currentFile = L"";
+#include "../../include/window/wndProc.h"
+
+std::string currentFile = "";
 
 void AddMenu(HWND hwnd) {
 	// create main menu
@@ -27,31 +29,37 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 	// 'Open' clicked
 	if (LOWORD(wParam) == MENU_OPEN_ID) {
 		
-		OPENFILENAME ofn;
-		wchar_t szFile[265] = { 0 };
+		OPENFILENAMEA ofn;
+		char szFile[265] = { 0 };
 
 		// Initialize ofn
 		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(ofn);
+		ofn.lStructSize = sizeof(OPENFILENAMEA);
 		ofn.hwndOwner = NULL;
 		ofn.lpstrFile = szFile;
-		ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
-		ofn.lpstrFilter = L"All Files\0*.*\0Text Files\0*.TXT\0";
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = "All Files\0*.*\0Text Files\0*.TXT\0";
 		
 		// if file selected
-		if (GetOpenFileName(&ofn) == TRUE) {
+		if (GetOpenFileNameA(&ofn) == TRUE) {
 			currentFile = ofn.lpstrFile;
-			std::wcout << currentFile;
 
-			std::ifstream file;
+			FILE* hFile = fopen(currentFile.c_str(), "rb");
 
-			file.open(currentFile, std::ios::in | std::ios::binary);
+			if (hFile != NULL) {
+				// read file's size
+				fseek(hFile, 0, SEEK_END);
+				long fileSize = ftell(hFile);
+				fseek(hFile, 0, SEEK_SET);
 
-			if (file.is_open()) {
-				std::string buff;
-				file >> buff;
-				SendDlgItemMessageA(hwnd, EDITOR_ID, WM_SETTEXT, 0, (LPARAM)buff.c_str());
-				file.close();
+				std::string buffer(fileSize, '\0');
+
+				fread(buffer.data(), 1, fileSize, hFile);
+
+
+				SendDlgItemMessageA(hwnd, EDITOR_ID, WM_SETTEXT, 0, (LPARAM)buffer.c_str());
+				UpdateLines(hwnd);
+				fclose(hFile);
 			}
 		}
 
@@ -63,33 +71,31 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 
 		// If file is not choosen
 		if (currentFile.empty()) {
-			OPENFILENAME ofn;
-			wchar_t szFile[265] = { 0 };
+			OPENFILENAMEA ofn;
+			char szFile[265] = { 0 };
 
 			// Initialize ofn
 			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
+			ofn.lStructSize = sizeof(OPENFILENAMEA);
 			ofn.hwndOwner = NULL;
 			ofn.lpstrFile = szFile;
-			ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
-			ofn.lpstrFilter = L"All Files\0*.*\0Text Files\0*.TXT\0";
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = "All Files\0*.*\0Text Files\0*.TXT\0";
 
-			if (GetSaveFileName(&ofn) == TRUE) {
-				std::ofstream newFile(ofn.lpstrFile);
+			if (GetSaveFileNameA(&ofn) == TRUE) {
+
+				FILE* hFile = fopen(ofn.lpstrFile, "w");
 				
-				if (newFile.is_open()) {
-
+				if (hFile != NULL) {
 					int length = SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXTLENGTH, 0,0);
 
-					char* buff = new char[length+1];
+					std::string buffer(length+1, '\n');
 
-					SendDlgItemMessageA(hwnd, EDITOR_ID , WM_GETTEXT, length+1, (LPARAM)buff);
+					SendDlgItemMessageA(hwnd, EDITOR_ID , WM_GETTEXT, length+1, (LPARAM)buffer.data());
 
-					newFile << buff;
+					fwrite(buffer.data(), buffer.size(), 1, hFile);
 
-					delete[] buff;
-
-					newFile.close();
+					fclose(hFile);
 
 					currentFile = ofn.lpstrFile;
 
@@ -102,20 +108,18 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 				}
 			}
 		}
-		else { // if file is chose
-			std::ofstream newFile(currentFile.data());
+		else { // if file is choosen
+			FILE* hFile = fopen(currentFile.c_str(), "w");
 
 			int length = SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXTLENGTH, 0, 0);
 
-			char* buff = new char[length + 1];
+			std::string buffer(length + 1, '\n');
 
-			SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXT, length + 1, (LPARAM)buff);
+			SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXT, length + 1, (LPARAM)buffer.data());
 
-			newFile << buff;
+			fwrite(buffer.data(), buffer.size(), 1, hFile);
 
-			delete[] buff;
-
-			newFile.close();
+			fclose(hFile);
 
 			LogInfo("File saved succesfully!");
 		}
