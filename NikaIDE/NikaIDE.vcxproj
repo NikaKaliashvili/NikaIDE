@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\editor\editor.cpp" />
     <ClCompile Include="src\window\menu.cpp" />
     <ClCompile Include="src\window\window.cpp" />
     <ClCompile Include="main.cpp" />
@@ -131,6 +132,7 @@
     <ClCompile Include="src\window\wndProc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\editor\editor.h" />
     <ClInclude Include="include\logger\logger.h" />
     <ClInclude Include="include\nikaide.h" />
     <ClInclude Include="include\window\menu.h" />

@@ -25,3 +25,4 @@
 #include "../include/window/window.h"
 #include "../include/window/menu.h"
 #include "../include/logger/logger.h"
+#include "../include/editor/editor.h"
