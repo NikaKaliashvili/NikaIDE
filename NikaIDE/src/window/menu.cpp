@@ -58,7 +58,7 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 
 
 				SendDlgItemMessageA(hwnd, EDITOR_ID, WM_SETTEXT, 0, (LPARAM)buffer.c_str());
-				UpdateLines(hwnd);
+				//UpdateLines(hwnd);
 				fclose(hFile);
 			}
 		}
