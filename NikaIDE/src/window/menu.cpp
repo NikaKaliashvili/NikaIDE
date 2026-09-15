@@ -4,7 +4,7 @@
 
 std::string currentFile = "";
 
-void AddMenu(HWND hwnd) {
+void AddMainMenu(HWND hwnd) {
 	// create main menu
 	HMENU hMenu = CreateMenu();
 

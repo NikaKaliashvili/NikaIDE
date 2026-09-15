@@ -2,7 +2,8 @@
 
 #include "../nikaide.h"
 
-// adds menuf
-void AddMenu(HWND hwnd);
+// adds main menu
+void AddMainMenu(HWND hwnd);
 
+// handles menu buttons functionality
 void HandleMenu(WPARAM wParam, HWND hwnd);

@@ -126,6 +126,14 @@
   <ItemGroup>
     <ClCompile Include="src\editor\editor.cpp" />
     <ClCompile Include="src\window\menu.cpp" />
+    <ClCompile Include="src\window\messages\wm_char.cpp" />
+    <ClCompile Include="src\window\messages\wm_command.cpp" />
+    <ClCompile Include="src\window\messages\wm_create.cpp" />
+    <ClCompile Include="src\window\messages\wm_destroy.cpp" />
+    <ClCompile Include="src\window\messages\wm_keydown.cpp" />
+    <ClCompile Include="src\window\messages\wm_mousewheel.cpp" />
+    <ClCompile Include="src\window\messages\wm_paint.cpp" />
+    <ClCompile Include="src\window\messages\wm_size.cpp" />
     <ClCompile Include="src\window\window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\logger\logger.cpp" />
@@ -136,6 +144,7 @@
     <ClInclude Include="include\logger\logger.h" />
     <ClInclude Include="include\nikaide.h" />
     <ClInclude Include="include\window\menu.h" />
+    <ClInclude Include="include\window\wmCommands.h" />
     <ClInclude Include="include\window\window.h" />
     <ClInclude Include="include\window\wndProc.h" />
   </ItemGroup>
