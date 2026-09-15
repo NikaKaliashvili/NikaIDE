@@ -10,12 +10,15 @@ public:
 	std::vector<std::string> lines;
 
 	size_t cursorLine, cursorColumn, scrollY;
+	int tabSize = 5;
 
 	// Draws text to the screen
 	void Draw(HDC hdc);
 
+	// Draws lines
 	void DrawLines(HDC hdc);
 
+	// Draws cursor of the editor
 	void DrawPointer(HDC hdc);
 
 	// Handles typing/enter/backspace and etc...
@@ -26,6 +29,12 @@ public:
 	
 	// Handles when backspace is pressed
 	void HandleBackspace();
+
+	// Handles when delete is pressed
+	void HandleDelete();
+
+	// Handles when tab is pressed
+	void HandleTab();
 	
 	// Handles when enter is pressed
 	void HandleEnter();

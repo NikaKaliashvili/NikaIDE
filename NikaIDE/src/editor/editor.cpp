@@ -101,6 +101,18 @@ void Editor::HandleBackspace() {
 	
 }
 
+void Editor::HandleDelete() {
+	if (!lines[cursorLine].empty()) // if line is not empty
+	{
+		lines[cursorLine].erase(cursorColumn, 1); // remove character
+	}
+	else {
+		if (lines.size()-1 > cursorLine) {
+			lines.erase(lines.begin() + cursorLine);
+		}
+	}
+}
+
 void Editor::HandleEnter()
 {
 	std::string newLine = lines[cursorLine].substr(cursorColumn);
@@ -114,6 +126,15 @@ void Editor::HandleEnter()
 
 	cursorLine++;
 	cursorColumn = 0;
+}
+
+// spaces are temporary, will change later!
+void Editor::HandleTab()
+{
+	for (int i = 0; i < 4; i++) {
+		lines[cursorLine].insert(cursorColumn, 1, ' ');
+		cursorColumn++;
+	}
 }
 
 void Editor::ScrollUp()
@@ -183,6 +204,10 @@ void Editor::HandleInput(WPARAM wParam) {
 	switch (wParam) {
 	case '\r':
 		HandleEnter();
+		break;
+
+	case '\t':
+		HandleTab();
 		break;
 
 	case '\b':

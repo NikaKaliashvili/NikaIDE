@@ -24,11 +24,9 @@ void AddMainMenu(HWND hwnd) {
 	SetMenu(hwnd, hMenu);
 }
 
-void HandleMenu(WPARAM wParam, HWND hwnd) {
-
-	// 'Open' clicked
+static void OpenFile(HWND hwnd, WPARAM wParam) {
 	if (LOWORD(wParam) == MENU_OPEN_ID) {
-		
+
 		OPENFILENAMEA ofn;
 		char szFile[265] = { 0 };
 
@@ -39,7 +37,7 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = "All Files\0*.*\0Text Files\0*.TXT\0";
-		
+
 		// if file selected
 		if (GetOpenFileNameA(&ofn) == TRUE) {
 			currentFile = ofn.lpstrFile;
@@ -56,17 +54,55 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 
 				fread(buffer.data(), 1, fileSize, hFile);
 
+				// initialize new lines
+				std::vector<std::string> newLines;
+				newLines.push_back("");
 
-				SendDlgItemMessageA(hwnd, EDITOR_ID, WM_SETTEXT, 0, (LPARAM)buffer.c_str());
-				//UpdateLines(hwnd);
+				int currentLine = 0;
+				int currentColumn = 0;
+
+				for (char letter : buffer) {
+
+					switch (letter) {
+
+					case '\n':
+						continue;
+
+					case '\t': // temporary spaces for tabulation
+						for (int i = 0; i < 4; i++)
+						{
+							newLines[currentLine].insert(currentColumn, 1, ' ');
+							currentColumn++;
+						}
+						break;
+
+					case '\r':
+						currentLine++;
+						currentColumn = 0;
+						newLines.push_back("");
+						break;
+
+					default:
+						newLines[currentLine].insert(currentColumn, 1, letter);
+						currentColumn++;
+						break;
+					}
+				}
+
+				editor.lines = newLines;
+				editor.cursorLine = currentLine;
+				editor.cursorColumn = newLines[currentLine].size();
+				InvalidateRect(hwnd, NULL, true);
+
 				fclose(hFile);
 			}
 		}
 
 		return;
 	}
+}
 
-	// 'Save' clicked
+static void SaveFile(HWND hwnd, WPARAM wParam) {
 	if (LOWORD(wParam) == MENU_SAVE_ID) {
 
 		// If file is not choosen
@@ -85,15 +121,19 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 			if (GetSaveFileNameA(&ofn) == TRUE) {
 
 				FILE* hFile = fopen(ofn.lpstrFile, "w");
-				
+
 				if (hFile != NULL) {
-					int length = SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXTLENGTH, 0,0);
 
-					std::string buffer(length+1, '\n');
+					std::string buffer;
 
-					SendDlgItemMessageA(hwnd, EDITOR_ID , WM_GETTEXT, length+1, (LPARAM)buffer.data());
+					for (int i = 0; i < editor.lines.size(); i++) {
+						buffer += editor.lines[i].c_str();
 
-					fwrite(buffer.data(), buffer.size(), 1, hFile);
+						if (i+1 < editor.lines.size())
+							buffer += '\r';
+					}
+
+					fwrite(buffer.c_str(), buffer.length(), 1, hFile);
 
 					fclose(hFile);
 
@@ -111,17 +151,20 @@ void HandleMenu(WPARAM wParam, HWND hwnd) {
 		else { // if file is choosen
 			FILE* hFile = fopen(currentFile.c_str(), "w");
 
-			int length = SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXTLENGTH, 0, 0);
-
-			std::string buffer(length + 1, '\n');
-
-			SendDlgItemMessageA(hwnd, EDITOR_ID, WM_GETTEXT, length + 1, (LPARAM)buffer.data());
-
-			fwrite(buffer.data(), buffer.size(), 1, hFile);
+			fwrite(editor.lines.data(), editor.lines.size(), 1, hFile);
 
 			fclose(hFile);
 
 			LogInfo("File saved succesfully!");
 		}
 	}
+}
+
+void HandleMenu(WPARAM wParam, HWND hwnd) {
+
+	// 'Open' clicked
+	OpenFile(hwnd, wParam);
+
+	// 'Save' clicked
+	SaveFile(hwnd, wParam);
 }

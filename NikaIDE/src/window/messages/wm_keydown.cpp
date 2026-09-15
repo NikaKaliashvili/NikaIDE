@@ -21,6 +21,11 @@ LRESULT HandleKeyDown(HWND hwnd, WPARAM wParam, LPARAM lParam) {
 		editor.HandlePointer('D');
 		InvalidateRect(hwnd, nullptr, TRUE);
 		break;
+
+	case VK_DELETE:
+		editor.HandleDelete();
+		InvalidateRect(hwnd, nullptr, TRUE);
+		break;
 	}
 
 	return 0;
