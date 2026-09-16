@@ -47,4 +47,7 @@ public:
 
 	// Moves cursor left
 	void HandlePointer(char Dir);
+
+	// Moves cursor at the end of the word
+	void HandlePointerCtrl(char Dir);
 };

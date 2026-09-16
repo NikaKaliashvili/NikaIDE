@@ -256,6 +256,34 @@ void Editor::HandlePointer(char Dir) {
 	}
 }
 
+void Editor::HandlePointerCtrl(char Dir)
+{
+	if (Dir == 'L') {
+		while (cursorColumn > 0) {
+
+			if (lines[cursorLine][cursorColumn - 1] == 32 || lines[cursorLine][cursorColumn - 1] == ' ') {
+				return;
+			}
+			else {
+				cursorColumn--;
+			}
+
+		}
+	}
+
+	if (Dir == 'R') {
+		while (cursorColumn < lines[cursorLine].length()) {
+
+			if (lines[cursorLine][cursorColumn + 1] == 32 || lines[cursorLine][cursorColumn + 1] == ' ') {
+				return;
+			}
+			else {
+				cursorColumn++;
+			}
+		}
+	}
+}
+
 void Editor::HandleInput(WPARAM wParam) {
 	switch (wParam) {
 	case '\r':
