@@ -151,7 +151,16 @@ static void SaveFile(HWND hwnd, WPARAM wParam) {
 		else { // if file is choosen
 			FILE* hFile = fopen(currentFile.c_str(), "w");
 
-			fwrite(editor.lines.data(), editor.lines.size(), 1, hFile);
+			std::string buffer;
+
+			for (int i = 0; i < editor.lines.size(); i++) {
+				buffer += editor.lines[i].c_str();
+
+				if (i + 1 < editor.lines.size())
+					buffer += '\r';
+			}
+
+			fwrite(buffer.c_str(), buffer.length(), 1, hFile);
 
 			fclose(hFile);
 

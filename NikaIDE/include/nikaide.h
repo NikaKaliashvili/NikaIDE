@@ -26,6 +26,7 @@
 #include "../include/window/menu.h"
 #include "../include/logger/logger.h"
 #include "../include/editor/editor.h"
+#include "../include/editor/lexer.h"
 
 inline extern RECT windowSize = RECT{ 0 };
 inline extern Editor editor = {};

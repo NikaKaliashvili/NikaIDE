@@ -24,6 +24,8 @@ void Editor::DrawLines(HDC hdc) {
 	HFONT codeFont = CreateFontW(24, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("Cascadia Code"));
 	HFONT oldFont = (HFONT)SelectObject(hdc, codeFont);
 
+	SetTextColor(hdc, RGB(0, 0, 0));
+
 	for (int i = scrollY; i < lines.size(); i++) {
 		lineNumbers += std::to_string(i + 1);
 		lineNumbers += "\n";
@@ -32,6 +34,40 @@ void Editor::DrawLines(HDC hdc) {
 
 	SelectObject(hdc, oldFont);
 	DeleteObject(codeFont);
+}
+
+static void HandleColors(_TokenType type, HDC hdc) {
+
+	switch (type) {
+
+
+	case _TokenType::Identifier :
+	case _TokenType::Equals:
+	case _TokenType::Semicolon:
+		SetTextColor(hdc, RGB(0, 0, 0));
+		break;
+
+	case _TokenType::Plus:
+	case _TokenType::Minus :
+	case _TokenType::Number :
+		SetTextColor(hdc, RGB(255, 100, 100));
+		break;
+
+	case _TokenType::Keyword :
+		SetTextColor(hdc, RGB(25, 25, 255));
+		break;
+
+	case _TokenType::LeftBrace :
+	case _TokenType::RightBrace:
+		SetTextColor(hdc, RGB(255, 25, 25));
+		break;
+
+	case _TokenType::LeftParen:
+	case _TokenType::RightParen:
+		SetTextColor(hdc, RGB(99, 121, 255));
+		break;
+
+	}
 }
 
 void Editor::Draw(HDC hdc) {
@@ -56,11 +92,31 @@ void Editor::Draw(HDC hdc) {
 
     HFONT oldFont = (HFONT)SelectObject(hdc, codeFont);
 
-	for (int i = scrollY; i < lines.size(); i++) {
+	TEXTMETRIC tm;
+	GetTextMetrics(hdc, &tm);
 
+	for (int i = scrollY; i < lines.size(); i++)
+	{
 		int screenY = 40 + (i - scrollY) * 24;
 
-		TextOutA(hdc, 60, screenY, lines[i].c_str(), lines[i].length());
+		Lexer lexer(lines[i]);
+
+		std::vector<Token> tokens = lexer.Tokenize();
+
+		for (const Token& token : tokens)
+		{
+			HandleColors(token.type, hdc);
+
+			int x = 60 + token.column * tm.tmAveCharWidth;
+
+			TextOutA(
+				hdc,
+				x,
+				screenY,
+				token.text.c_str(),
+				static_cast<int>(token.text.length())
+			);
+		}
 	}
 
 	// draw cursor

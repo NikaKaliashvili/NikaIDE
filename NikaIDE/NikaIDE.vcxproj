@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\editor\editor.cpp" />
+    <ClCompile Include="src\editor\lexer.cpp" />
     <ClCompile Include="src\window\menu.cpp" />
     <ClCompile Include="src\window\messages\wm_char.cpp" />
     <ClCompile Include="src\window\messages\wm_command.cpp" />
@@ -141,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\editor\editor.h" />
+    <ClInclude Include="include\editor\lexer.h" />
     <ClInclude Include="include\logger\logger.h" />
     <ClInclude Include="include\nikaide.h" />
     <ClInclude Include="include\window\menu.h" />
