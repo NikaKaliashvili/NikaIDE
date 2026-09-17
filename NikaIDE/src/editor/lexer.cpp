@@ -173,6 +173,12 @@ std::vector<Token> Lexer::Tokenize() {
 			continue;
 		}
 
+		if (current == ',') {
+			tokens.push_back(Token(_TokenType::Comma, ",", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
 		if (current == '!') {
 			tokens.push_back(Token(_TokenType::Exclamation, "!", static_cast<int>(position)));
 			position++;
@@ -242,6 +248,12 @@ std::vector<Token> Lexer::Tokenize() {
 
 		if (current == ')') {
 			tokens.push_back(Token(_TokenType::RightParen, ")", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
+		if (current == ':'){
+			tokens.push_back(Token(_TokenType::Colon, ":", static_cast<int>(position)));
 			position++;
 			continue;
 		}

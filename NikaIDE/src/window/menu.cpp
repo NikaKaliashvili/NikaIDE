@@ -2,8 +2,6 @@
 
 #include "../../include/window/wndProc.h"
 
-std::string currentFile = "";
-
 void AddMainMenu(HWND hwnd) {
 	// create main menu
 	HMENU hMenu = CreateMenu();
@@ -102,7 +100,7 @@ static void OpenFile(HWND hwnd, WPARAM wParam) {
 	}
 }
 
-static void SaveFile(HWND hwnd, WPARAM wParam) {
+bool SaveFile(HWND hwnd, WPARAM wParam) {
 	if (LOWORD(wParam) == MENU_SAVE_ID) {
 
 		// If file is not choosen
@@ -140,11 +138,11 @@ static void SaveFile(HWND hwnd, WPARAM wParam) {
 					currentFile = ofn.lpstrFile;
 
 					LogInfo("File saved succesfully!");
-					return;
+					return 0;
 				}
 				else {
 					LogInfo("Failed to save the file!");
-					return;
+					return 0;
 				}
 			}
 		}
@@ -165,6 +163,7 @@ static void SaveFile(HWND hwnd, WPARAM wParam) {
 			fclose(hFile);
 
 			LogInfo("File saved succesfully!");
+			return 1;
 		}
 	}
 }

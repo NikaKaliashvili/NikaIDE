@@ -10,6 +10,7 @@ enum _TokenType
     Comment,
     Hash,
     Dot,
+    Comma,
     Exclamation,
     Dash,
     String,
@@ -18,6 +19,7 @@ enum _TokenType
     Minus,
     Equals,
 
+    Colon,
     Semicolon,
 
     LeftParen,

@@ -2,6 +2,9 @@
 
 #include "../nikaide.h"
 
+// saves file
+bool SaveFile(HWND hwnd, WPARAM wParam);
+
 // adds main menu
 void AddMainMenu(HWND hwnd);
 

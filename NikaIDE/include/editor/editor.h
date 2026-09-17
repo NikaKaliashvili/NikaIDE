@@ -33,6 +33,9 @@ public:
 	// Handles when delete is pressed
 	void HandleDelete();
 
+	// Handles when left bracket is pressed for auto completion
+	void HandleLeftBracket();
+
 	// Handles when tab is pressed
 	void HandleTab();
 	

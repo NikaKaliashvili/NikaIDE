@@ -8,6 +8,9 @@
 #define EDITOR_ID 100
 #define EDITOR_LINES_ID 101
 #define EXPLORER_ID 200
+#define LANGUAGES_ID 300
+#define BUILD_ID 301
+#define BUILD_RUN_ID 302
 
 #define LogInfo(message) NikaIDE::Logger::Info(message)
 #define LogWarning(message) NikaIDE::Logger::Warning(message)
@@ -30,3 +33,5 @@
 
 inline extern RECT windowSize = RECT{ 0 };
 inline extern Editor editor = {};
+inline extern HWND languageBox = nullptr;
+inline extern std::string currentFile = "";

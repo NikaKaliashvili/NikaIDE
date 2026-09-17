@@ -50,6 +50,8 @@ static void HandleColors(_TokenType type, HDC hdc) {
 		break;
 
 	case _TokenType::Plus:
+	case _TokenType::Colon:
+	case _TokenType::Comma:
 	case _TokenType::Minus :
 	case _TokenType::Number :
 		SetTextColor(hdc, RGB(255, 100, 100));
@@ -115,7 +117,15 @@ void Editor::Draw(HDC hdc) {
 
 		for (const Token& token : tokens)
 		{
-			HandleColors(token.type, hdc);
+			int index = SendMessageA(languageBox, CB_GETCURSEL, 0, 0);
+
+			if (index == 0) {
+				SetTextColor(hdc, RGB(0, 0, 0));
+			}
+			else {
+				HandleColors(token.type, hdc);
+			}
+
 
 			int x = 60 + token.column * tm.tmAveCharWidth;
 
@@ -321,6 +331,20 @@ void Editor::HandlePointerCtrl(char Dir)
 	}
 }
 
+void Editor::HandleLeftBracket() {
+	int index = SendMessageA(languageBox, CB_GETCURSEL, 0, 0);
+
+	if (index > 0) {
+		lines[cursorLine].insert(cursorColumn, 1, '{');
+		cursorColumn++;
+		lines[cursorLine].insert(cursorColumn, 1, '}');
+	}
+	else {
+		lines[cursorLine].insert(cursorColumn, 1, '{');
+		cursorColumn++;
+	}
+}
+
 void Editor::HandleInput(WPARAM wParam) {
 	if (GetKeyState(VK_CONTROL) & 0x8000)
 		return;
@@ -328,6 +352,10 @@ void Editor::HandleInput(WPARAM wParam) {
 	switch (wParam) {
 	case '\r':
 		HandleEnter();
+		break;
+
+	case '{':
+		HandleLeftBracket();
 		break;
 
 	case '\b':
