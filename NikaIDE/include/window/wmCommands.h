@@ -24,4 +24,7 @@ LRESULT HandleMouseWheel(HWND hwnd, WPARAM wParam, LPARAM lParam);
 LRESULT HandleCommand(HWND hwnd, WPARAM wParam, LPARAM lParam);
 
 // WM_DESTROY
+LRESULT HandleLButtonDown(HWND hwnd, WPARAM wParam, LPARAM lParam);
+
+// WM_DESTROY
 LRESULT HandleDestroy(HWND hwnd, WPARAM wParam, LPARAM lParam);

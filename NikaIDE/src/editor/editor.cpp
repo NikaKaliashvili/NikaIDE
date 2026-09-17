@@ -261,11 +261,17 @@ void Editor::HandlePointerCtrl(char Dir)
 	if (Dir == 'L') {
 		while (cursorColumn > 0) {
 
-			if (lines[cursorLine][cursorColumn - 1] == 32 || lines[cursorLine][cursorColumn - 1] == ' ') {
+			if (lines[cursorLine][cursorColumn - 1] == ' ') {
 				return;
 			}
 			else {
-				cursorColumn--;
+				if ((cursorColumn - 1) == 0) {
+					cursorColumn = 1;
+					return;
+				}
+				else {
+					cursorColumn--;
+				}
 			}
 
 		}
@@ -274,7 +280,7 @@ void Editor::HandlePointerCtrl(char Dir)
 	if (Dir == 'R') {
 		while (cursorColumn < lines[cursorLine].length()) {
 
-			if (lines[cursorLine][cursorColumn + 1] == 32 || lines[cursorLine][cursorColumn + 1] == ' ') {
+			if (lines[cursorLine][cursorColumn + 1] == ' ') {
 				return;
 			}
 			else {

@@ -14,6 +14,9 @@ LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		return HandlePaint(hwnd, wParam, lParam);
 
+	case WM_LBUTTONDOWN:
+		return HandleLButtonDown(hwnd, wParam, lParam);
+
 	case WM_SIZE:
 		return HandleSize(hwnd, wParam, lParam);
 

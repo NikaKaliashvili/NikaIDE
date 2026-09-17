@@ -132,6 +132,7 @@
     <ClCompile Include="src\window\messages\wm_create.cpp" />
     <ClCompile Include="src\window\messages\wm_destroy.cpp" />
     <ClCompile Include="src\window\messages\wm_keydown.cpp" />
+    <ClCompile Include="src\window\messages\wm_lbuttondown.cpp" />
     <ClCompile Include="src\window\messages\wm_mousewheel.cpp" />
     <ClCompile Include="src\window\messages\wm_paint.cpp" />
     <ClCompile Include="src\window\messages\wm_size.cpp" />
