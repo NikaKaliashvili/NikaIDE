@@ -16,6 +16,11 @@ LRESULT HandleKeyDown(HWND hwnd, WPARAM wParam, LPARAM lParam) {
 			InvalidateRect(hwnd, nullptr, TRUE);
 			break;
 
+		case VK_BACK:
+			editor.HandlePointerCtrl('B');
+			InvalidateRect(hwnd, nullptr, TRUE);
+			break;
+
 		}
 
 	}
@@ -43,6 +48,11 @@ LRESULT HandleKeyDown(HWND hwnd, WPARAM wParam, LPARAM lParam) {
 
 	case VK_DELETE:
 		editor.HandleDelete();
+		InvalidateRect(hwnd, nullptr, TRUE);
+		break;
+
+	case VK_BACK:
+		editor.HandleBackspace();
 		InvalidateRect(hwnd, nullptr, TRUE);
 		break;
 	}

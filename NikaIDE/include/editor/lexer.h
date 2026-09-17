@@ -12,6 +12,7 @@ enum _TokenType
     Dot,
     Exclamation,
     Dash,
+    String,
 
     Plus,
     Minus,

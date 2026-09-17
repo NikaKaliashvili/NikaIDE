@@ -128,6 +128,39 @@ std::vector<Token> Lexer::Tokenize() {
 			continue;
 		}
 
+		if (current == '"' && position + 1 >= source.length()){
+			tokens.push_back(Token(_TokenType::String, "\"", static_cast<int>(position)));
+			position++;
+		}
+
+		if (current == '"')
+		{
+			size_t start = position;
+
+			position++;
+
+			while (position < source.length() &&
+				source[position] != '"')
+			{
+				position++;
+			}
+
+			if (position < source.length())
+			{
+				position++; // include closing "
+			}
+
+			tokens.push_back(
+				Token(
+					_TokenType::String,
+					source.substr(start, position - start),
+					static_cast<int>(start)
+				)
+			);
+
+			continue;
+		}
+
 		if (current == '#') {
 			tokens.push_back(Token(_TokenType::Hash, "#", static_cast<int>(position)));
 			position++;

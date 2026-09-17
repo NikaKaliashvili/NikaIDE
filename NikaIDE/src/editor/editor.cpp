@@ -59,6 +59,7 @@ static void HandleColors(_TokenType type, HDC hdc) {
 		SetTextColor(hdc, RGB(25, 25, 255));
 		break;
 
+	case _TokenType::String:
 	case _TokenType::AngleLeft:
 	case _TokenType::AngleRight:
 	case _TokenType::LeftBrace :
@@ -128,8 +129,8 @@ void Editor::Draw(HDC hdc) {
 		}
 	}
 
-	// draw cursor
 	DrawPointer(hdc);
+	// draw cursor
 
 	// draw lines
 	DrawLines(hdc);
@@ -150,17 +151,16 @@ void Editor::HandleCharacter(char character)
 
 void Editor::HandleBackspace() {
 
-	if (!lines[cursorLine].empty()) // if line is not empty
-	{
-		lines[cursorLine].erase(cursorColumn - 1, 1); // remove character
-
+	if (cursorColumn > 0) {
 		cursorColumn--;
+		lines[cursorLine].erase(cursorColumn, 1);
 	}
 	else {
-		if (cursorLine > 0) { // if line is empty but there is other lines
+		if (cursorLine > 0) {
+			lines[cursorLine - 1] += lines[cursorLine];
 			lines.erase(lines.begin() + cursorLine);
-			cursorLine -= 1; // go to previous line
-			cursorColumn = lines[cursorLine].length(); // set cursorColumn to at the end
+			cursorLine--;
+			cursorColumn = lines[cursorLine].length();
 		}
 	}
 	
@@ -267,6 +267,28 @@ void Editor::HandlePointer(char Dir) {
 
 void Editor::HandlePointerCtrl(char Dir)
 {
+	if (Dir == 'B') {
+
+		if (cursorColumn > 0) {
+
+			size_t start = cursorColumn;
+
+			while (cursorColumn > 0 && lines[cursorLine][cursorColumn-1] != ' ') {
+
+				if (cursorColumn-1 == 0) {
+					lines[cursorLine].erase(cursorColumn, start);
+					return;
+				}
+
+				cursorColumn--;
+			}
+			
+			lines[cursorLine].erase(cursorColumn, start);
+
+		}
+
+	}
+
 	if (Dir == 'L') {
 		while (cursorColumn > 0) {
 
@@ -300,17 +322,19 @@ void Editor::HandlePointerCtrl(char Dir)
 }
 
 void Editor::HandleInput(WPARAM wParam) {
+	if (GetKeyState(VK_CONTROL) & 0x8000)
+		return;
+
 	switch (wParam) {
 	case '\r':
 		HandleEnter();
 		break;
 
-	case '\t':
-		HandleTab();
+	case '\b':
 		break;
 
-	case '\b':
-		HandleBackspace();
+	case '\t':
+		HandleTab();
 		break;
 
 	default:
