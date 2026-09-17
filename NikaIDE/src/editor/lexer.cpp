@@ -1,5 +1,30 @@
 #include "../../include/nikaide.h"
 
+std::vector<std::string> keywords = {
+	"int",
+	"char",
+	"float",
+	"double",
+	"bool",
+	"void",
+	"if",
+	"else",
+	"for",
+	"while",
+	"return",
+	"class",
+	"struct",
+	"public",
+	"private",
+	"protected",
+	"const"
+};
+
+bool Lexer::IsKeyword(const std::string& text)
+{
+	return std::find(keywords.begin(), keywords.end(), text) != keywords.end();
+}
+
 Lexer::Lexer(const std::string& source) {
 	this->source = source;
 	this->position = 0;
@@ -28,11 +53,13 @@ Token Lexer::ReadIdentifier()
 		}
 	}
 
-	if (source.substr(start, position - start) == "int") {
+	std::string text = source.substr(start, position - start);
+
+	if (IsKeyword(text)) {
 		return {
-		_TokenType::Keyword,
-		source.substr(start,position - start),
-		static_cast<int>(start)
+			_TokenType::Keyword,
+			text,
+			static_cast<int>(start)
 		};
 	}
 
@@ -101,6 +128,36 @@ std::vector<Token> Lexer::Tokenize() {
 			continue;
 		}
 
+		if (current == '#') {
+			tokens.push_back(Token(_TokenType::Hash, "#", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
+		if (current == '.') {
+			tokens.push_back(Token(_TokenType::Dot, ".", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
+		if (current == '!') {
+			tokens.push_back(Token(_TokenType::Exclamation, "!", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
+		if (current == '<') {
+			tokens.push_back(Token(_TokenType::AngleLeft, "<", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
+		if (current == '>') {
+			tokens.push_back(Token(_TokenType::AngleRight, ">", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
 		if (current == '+') {
 			tokens.push_back(Token(_TokenType::Plus, "+", static_cast<int>(position)));
 			position++;
@@ -121,6 +178,25 @@ std::vector<Token> Lexer::Tokenize() {
 
 		if (current == '}') {
 			tokens.push_back(Token(_TokenType::RightBrace, "}", static_cast<int>(position)));
+			position++;
+			continue;
+		}
+
+		if (current == '/' && position + 1 < source.length() && source[position + 1] == '/') {
+
+			size_t start = position;
+
+			position += 2;
+
+			while (position < source.length())
+				position++;
+
+			tokens.push_back(Token(_TokenType::Comment, source.substr(start, position - start), static_cast<int>(start)));
+			continue;
+		}
+
+		if (current == '/' && source[position+1] != '/') {
+			tokens.push_back(Token(_TokenType::Dash, "/", static_cast<int>(position)));
 			position++;
 			continue;
 		}

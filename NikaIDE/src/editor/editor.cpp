@@ -40,9 +40,11 @@ static void HandleColors(_TokenType type, HDC hdc) {
 
 	switch (type) {
 
-
 	case _TokenType::Identifier :
 	case _TokenType::Equals:
+	case _TokenType::Dash:
+	case _TokenType::Dot:
+	case _TokenType::Exclamation :
 	case _TokenType::Semicolon:
 		SetTextColor(hdc, RGB(0, 0, 0));
 		break;
@@ -57,6 +59,8 @@ static void HandleColors(_TokenType type, HDC hdc) {
 		SetTextColor(hdc, RGB(25, 25, 255));
 		break;
 
+	case _TokenType::AngleLeft:
+	case _TokenType::AngleRight:
 	case _TokenType::LeftBrace :
 	case _TokenType::RightBrace:
 		SetTextColor(hdc, RGB(255, 25, 25));
@@ -65,6 +69,11 @@ static void HandleColors(_TokenType type, HDC hdc) {
 	case _TokenType::LeftParen:
 	case _TokenType::RightParen:
 		SetTextColor(hdc, RGB(99, 121, 255));
+		break;
+
+	case _TokenType::Hash:
+	case _TokenType::Comment:
+		SetTextColor(hdc, RGB(0, 200, 0));
 		break;
 
 	}
@@ -273,18 +282,18 @@ void Editor::HandlePointerCtrl(char Dir)
 					cursorColumn--;
 				}
 			}
-
 		}
 	}
 
 	if (Dir == 'R') {
-		while (cursorColumn < lines[cursorLine].length()) {
+		int length = static_cast<int>(lines[cursorLine].length());
 
-			if (lines[cursorLine][cursorColumn + 1] == ' ') {
+		while (length > cursorColumn && lines[cursorLine][cursorColumn+1] != ' ') {
+			cursorColumn++;
+
+			if (cursorColumn == length) {
+				cursorColumn--;
 				return;
-			}
-			else {
-				cursorColumn++;
 			}
 		}
 	}

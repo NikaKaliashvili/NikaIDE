@@ -7,6 +7,11 @@ enum _TokenType
     Identifier,
     Number,
     Keyword,
+    Comment,
+    Hash,
+    Dot,
+    Exclamation,
+    Dash,
 
     Plus,
     Minus,
@@ -18,7 +23,10 @@ enum _TokenType
     RightParen,
 
     LeftBrace,
-    RightBrace
+    RightBrace,
+
+    AngleLeft,
+    AngleRight
 };
 
 struct Token
@@ -35,6 +43,8 @@ public:
 
     bool IsIdentifierStart(char letter);
     bool IsIdentifierPart(char letter);
+    bool IsKeyword(const std::string& text);
+
     Token ReadIdentifier();
     Token ReadNumber();
 

@@ -16,8 +16,6 @@ LRESULT HandleKeyDown(HWND hwnd, WPARAM wParam, LPARAM lParam) {
 			InvalidateRect(hwnd, nullptr, TRUE);
 			break;
 
-
-
 		}
 
 	}
